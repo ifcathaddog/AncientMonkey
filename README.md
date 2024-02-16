@@ -32,7 +32,7 @@ Small Update
 -Coming Soon?!?!       
 
 Update 2.0.0:                                                                                         
-Biggest Update!
+Biggest Update!                                                                             
 -You Can Now Upgrade The Ancient Monkey And Make Im Even Stronger!                                                                             
 Bug: Sometimes you will lose a few options on the new weapon but it not game changing. I will try to fix it later.                                                                                       
 
