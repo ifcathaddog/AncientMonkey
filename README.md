@@ -29,6 +29,11 @@ Small Update
 -7 New Epic Weapon                                 
 -3 New Legendary Weapon                                 
 -Nerfed Monkey Boost From Stronger Weapon                                 
--Coming Soon?!?!                                 
+-Coming Soon?!?!       
+
+Update 2.0.0: 
+Biggest Update!
+-You Can Now Upgrade The Ancient Monkey And Make Im Even Stronger!
+Bug: Sometimes you will lose a few options on the new weapon but it not game changing. I will try to fix it later.
 
 [![Requires BTD6 Mod Helper](https://raw.githubusercontent.com/gurrenm3/BTD-Mod-Helper/master/banner.png)](https://github.com/gurrenm3/BTD-Mod-Helper#readme)
