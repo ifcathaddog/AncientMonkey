@@ -51,6 +51,7 @@ using System.Threading;
 using Il2CppSystem.Runtime.InteropServices;
 using BTD_Mod_Helper.Api.Display;
 using Il2CppAssets.Scripts.Unity.Display;
+using Il2CppAssets.Scripts.Models.Towers.Behaviors.Abilities;
 
 [assembly: MelonInfo(typeof(AncientMonkey.AncientMonkey), ModHelperData.Name, ModHelperData.Version, ModHelperData.RepoOwner)]
 [assembly: MelonGame("Ninja Kiwi", "BloonsTD6")]
@@ -1194,19 +1195,7 @@ public class AncientMonkey : BloonsTD6Mod
                 CreateUpgradeMenu(rect, tower);
             }
 
-            if (mod.mib == true)
-            {
-                var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
-                towerModel.GetDescendants<FilterInvisibleModel>().ForEach(model => model.isActive = false);
-                foreach (var weaponModel in towerModel.GetDescendants<WeaponModel>().ToArray())
-                {
-                    if (weaponModel.projectile.HasBehavior<DamageModel>())
-                    {
-                        weaponModel.projectile.GetDamageModel().immuneBloonProperties = BloonProperties.None;
-                    }
-                }
-                tower.UpdateRootModel(towerModel);
-            }
+            
 
         }
         public static void NewWeaponPanel(RectTransform rect, Tower tower)
@@ -3422,7 +3411,7 @@ public class AncientMonkey : BloonsTD6Mod
                 game.AddCash(-75000);
                 
                 RectTransform rect = game.uiRect;
-                Destroy(gameObject);
+            
                 mod.newWeaponCost = 300;
                 mod.baseNewWeaponCost = 300;
                 mod.rareChance = 0;
@@ -3439,22 +3428,33 @@ public class AncientMonkey : BloonsTD6Mod
                 mod.baseStrongerWeaponCost = 625;
                 mod.newAbilityCost = 1250;
                 mod.baseNewAbilityCost = 1250;
-                mod.mib = false;
                 mod.level += 1;
                 if (mod.upgradeOpen == true)
                 {
                     CreateUpgradeMenu(rect, tower);
                 }
+
+                var towerMdl = tower.rootModel.Duplicate().Cast<TowerModel>();
+                foreach (var abilityModel in towerMdl.GetDescendants<AbilityModel>().ToArray())
+                {
+                    towerMdl.RemoveBehavior(abilityModel);
+                }
+                towerMdl.RemoveBehaviors<AttackModel>();
+                
+                tower.UpdateRootModel(towerMdl);
                 tower.SetTowerModel(AncientMonkeyTower.GetTowerModel<AncientMonkeyTower>());
+                
                 var towerModel = tower.rootModel.Duplicate().Cast<TowerModel>();
+
                 towerModel.display = Game.instance.model.GetTowerFromId("DartMonkey-020").display;
                 towerModel.range += 15;
+                towerModel.AddBehavior(Game.instance.model.GetTowerFromId("DartMonkey").GetAttackModel().Duplicate());
                 towerModel.GetAttackModel().range += 15;
                 towerModel.GetAttackModel().weapons[0].rate = 0.75f;
                 towerModel.GetAttackModel().weapons[0].projectile.pierce = 6;
                 towerModel.GetAttackModel().weapons[0].projectile.GetDamageModel().damage = 8;
                 tower.UpdateRootModel(towerModel);
-               
+                Destroy(gameObject);
             }
         }
         public void Cancel(Tower tower)
@@ -3491,8 +3491,8 @@ public class AncientMonkey : BloonsTD6Mod
             ModHelperText abilityCost = panel.AddText(new Info("abilityCost", 800, 140, 1000, 180), "New Ability: $" + Mathf.Round(mod.newAbilityCost), 70);
             if (mod.selectingWeaponOpen == false)
             {
-                ModHelperButton abilityBtn = panel.AddButton(new Info("abilityBtn", 800, 20, 500, 160), VanillaSprites.GreenBtnLong, new System.Action(() => upgradeUi.NewAbility(tower)));
-                ModHelperText abilityBuy = abilityBtn.AddText(new Info("abilityBuy", 0, 0, 700, 160), "Buy", 70);
+                ModHelperButton abilityBtn = panel.AddButton(new Info("abilityBtn", 800, 20, 500, 160), VanillaSprites.GreenBtnLong,null); // new System.Action(() => upgradeUi.NewAbility(tower))
+                ModHelperText abilityBuy = abilityBtn.AddText(new Info("abilityBuy", 0, 0, 700, 160), "(Disabled Bc Bug)", 70);
             }
             ModHelperText abilityDesc = panel.AddText(new Info("abilityDesc", 800, -100, 860, 180), "Give an ability", 42);
 
